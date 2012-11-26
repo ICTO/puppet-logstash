@@ -33,15 +33,14 @@ class logstash::indexer (
 
   # create the config file based on the transport we are using
   # (this could also be extended to use different configs)
+
+  # Removed indexer-filter.conf.erb , from arrays...
   case  $logstash::config::logstash_transport {
     /^redis$/: { $indexer_conf_content = template('logstash/indexer-input-redis.conf.erb',
-                                                  'logstash/indexer-filter.conf.erb',
                                                   'logstash/indexer-output.conf.erb') }
     /^amqp$/:  { $indexer_conf_content = template('logstash/indexer-input-amqp.conf.erb',
-                                                  'logstash/indexer-filter.conf.erb',
                                                   'logstash/indexer-output.conf.erb') }
     default:   { $indexer_conf_content = template('logstash/indexer-input-amqp.conf.erb',
-                                                  'logstash/indexer-filter.conf.erb',
                                                   'logstash/indexer-output.conf.erb') }
   }
 
