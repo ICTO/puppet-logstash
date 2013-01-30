@@ -31,7 +31,10 @@ class logstash::redis (
 
     # build a package-version if we need to
     $redis_package = $logstash::config::redis_version ? {
-      /\d+./  => "${logstash::config::redis_package}-${logstash::config::redis_version}",
+      /\d+./    => $::operatingsystem ? {
+        debian  => "${logstash::config::redis_package}=${logstash::config::redis_version}",
+        default => "${logstash::config::redis_package}-${logstash::config::redis_version}" 
+      },
       default => $logstash::config::redis_package,
     }
 
@@ -42,7 +45,7 @@ class logstash::redis (
 
     # operatingsystem specific file & service names
     case $operatingsystem {
-      centos, redhat: { $redis_conf = '/etc/redis.conf'
+      centos, redhat, OEL: { $redis_conf = '/etc/redis.conf'
                         $redis_service = 'redis' }
       ubuntu, debian: { $redis_conf = '/etc/redis/redis.conf'
                         $redis_service = 'redis-server' }
